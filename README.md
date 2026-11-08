@@ -68,7 +68,8 @@ Each flow is a skill in [`.agents/skills/`](.agents/skills/) (Codex, OpenCode), 
 40-journal/    daily notes (you)
 50-outputs/    saved answers & lint reports
 90-system/     profile, templates, prior art
-scripts/       lint.py: mechanical health check
+scripts/       lint.py (health check), qmd-sync.sh (search index)
+.qmd/          qmd collection config (index itself is local)
 .agents/skills/ the operation procedures (one SKILL.md per flow)
 .claude/skills symlink -> ../.agents/skills (Claude Code)
 index.md       catalog: the agent reads it first
@@ -84,10 +85,29 @@ All rules live in [`AGENTS.md`](AGENTS.md). Change them there, and add discoveri
   links, frontmatter, index coverage, orphans, one-way links, duplicates, stale pages and inbox items, and
   in a git repo whether any file in `10-raw/` was modified. Exits 1 on errors, so it can run in CI or a pre-commit hook.
 
+## Search with qmd (optional)
+
+Install [qmd](https://github.com/tobi/qmd) (`npm install -g @tobilu/qmd`), then once:
+
+```bash
+scripts/qmd-sync.sh --wait
+```
+
+This builds a local index for the `wiki`, `projects`, `journal` and `outputs` collections (`raw` is opt-in with
+`-c raw`). The first run downloads the embedding model. After that the agent runs `scripts/qmd-sync.sh` at session
+start and after every write flow: it re-indexes right away and embeds in the background. Without qmd, the
+script does nothing and everything falls back to `index.md` + grep.
+
+```bash
+qmd search "zettelkasten" -n 5                       # keywords
+qmd query $'intent: …\nvec: …' -n 10                # semantic
+scripts/qmd-sync.sh --status                          # index health
+```
+
 ## Tips
 
 - **Ingest one source at a time** at first and read what changed. Batch ingest produces weaker links.
 - **Commit after each operation.** `git diff` is your review tool.
-- **Search** is just `index.md` + grep at first. Past a few hundred pages, add
-  [qmd](https://github.com/tobi/qmd) for local hybrid search.
+- **Search**: `index.md` + grep works out of the box. If [qmd](https://github.com/tobi/qmd) is installed, the
+  vault ships a project-local index config (`.qmd/index.yml`), and the agent keeps it fresh automatically (see below).
 - Obsidian plugins that fit: Web Clipper (capture), Dataview (frontmatter queries), Marp (slides).

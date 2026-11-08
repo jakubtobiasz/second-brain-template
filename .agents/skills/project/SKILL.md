@@ -37,6 +37,7 @@ changes). `log.md` = what it became (append-only). Detect the mode from the requ
 6. Refresh the project's line in `index.md` (status, one-line state). Root `log.md`: `## [YYYY-MM-DD] project | update <name>`.
 
 The log and index entry decay first because they feel invisible. Don't skip them.
+After start, update, or close, run `scripts/qmd-sync.sh`.
 
 ## Resume ("where are we on X?")
 Read `brief.md` + the last ~5 log entries + linked artefacts, then answer: goal, current state, last decision,

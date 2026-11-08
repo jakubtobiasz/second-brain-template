@@ -22,7 +22,9 @@ so check in before writing. Rules and page format: `AGENTS.md` §3 and §6.
 
 ## 2. Map against the wiki
 - From `index.md`, list candidate existing pages. For each key concept/entity, search before deciding
-  "new page": `grep -ril "<term>" 20-wiki/` and check `aliases:` in frontmatter.
+  "new page": `qmd search "<term> <alias>" -c wiki -n 10` (if qmd is installed; see AGENTS.md §5a), else
+  `grep -ril "<term>" 20-wiki/`, and check `aliases:` in frontmatter. For fuzzy overlap ("is this idea already
+  covered under another name?") use a structured `qmd query` with `intent:` + `vec:`.
 - Classify each touched page: **update** (adds info), **contradicts** (conflicts with an existing claim),
   **create** (no page exists and the topic matters beyond this one source), or **skip**.
 - New pages: create as `status: seed` when the source only mentions the topic in passing.
@@ -71,6 +73,7 @@ source page with `status: deprecated` and a one-line reason. Nothing is deleted.
   ## [YYYY-MM-DD] ingest | <Source Title>
   - created: [[a]], [[b]] · updated: [[c]], [[d]] · raw: 10-raw/YYYY-MM-DD-title.ext
   ```
+- Search index: run `scripts/qmd-sync.sh` (no-op without qmd).
 
 ## 7. Self-check, then report
 Run `python3 scripts/lint.py` and fix any **errors** you introduced (broken links, missing index lines, bad

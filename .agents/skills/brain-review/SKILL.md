@@ -45,7 +45,7 @@ Save to `50-outputs/queries/YYYY-MM-DD-weekly-review.md` (or `-daily-review`) wi
 ```
 
 ## Then
-- Log: `## [YYYY-MM-DD] review | weekly` + `- saved: …`.
+- Log: `## [YYYY-MM-DD] review | weekly` + `- saved: …`. Run `scripts/qmd-sync.sh`.
 - Ask which proposals to act on. Promotions run through the normal rules (citations, links, index, log).
   Tasks move to project logs or stay in the owner's journal (the owner writes that).
 

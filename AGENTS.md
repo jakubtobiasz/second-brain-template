@@ -22,7 +22,8 @@ Every session starts from disk, not memory. Before doing anything else:
 3. Read the last ~30 lines of `log.md` (`grep "^## \[" log.md | tail -10`) to see what happened recently.
 4. If the task concerns a project, read its `30-projects/<project>/brief.md` and the tail of its `log.md`.
 
-Do **not** read the whole wiki. Navigate index first, then open only the pages you need.
+Do **not** read the whole wiki. Navigate index first (plus `qmd` search if installed, §5a), then open only
+the pages you need.
 
 ---
 
@@ -50,6 +51,8 @@ Do **not** read the whole wiki. Navigate index first, then open only the pages y
 │   ├── about.md
 │   └── templates/
 ├── scripts/lint.py      # mechanical health check (stdlib Python)
+├── scripts/qmd-sync.sh  # refresh the local qmd search index (no-op without qmd)
+├── .qmd/index.yml       # qmd collections (committed); the index database is local and gitignored
 ├── .agents/skills/      # operation procedures (second-brain router + capture, ingest, query, …)
 └── .claude/skills       # symlink -> ../.agents/skills (for Claude Code)
 ```
@@ -186,6 +189,40 @@ Operation keywords: `ingest`, `query`, `lint`, `repair`, `project`, `review`, `s
 
 ---
 
+## 5a. Search (qmd, optional)
+
+If [qmd](https://github.com/tobi/qmd) is installed (`command -v qmd`), the vault has a **project-local** index:
+collections are defined in `.qmd/index.yml` (committed), and the database lives in `.qmd/index.sqlite` (local).
+Any `qmd` command run from the vault root uses it automatically.
+
+| Collection | Folder | Default search |
+|---|---|---|
+| `wiki` | `20-wiki/` | yes |
+| `projects` | `30-projects/` | yes |
+| `journal` | `40-journal/` | yes |
+| `outputs` | `50-outputs/queries/` | yes |
+| `raw` | `10-raw/` | no: use `-c raw` explicitly, as a fallback |
+
+The inbox, system files and lint reports are not indexed.
+
+**Keeping it fresh**: `scripts/qmd-sync.sh` re-indexes (fast) and embeds new or changed content in the background.
+Run it once at session start and at the end of every write flow (the skills do this). `--wait` embeds in the
+foreground; `--status` shows index health. Without qmd it prints a note and exits 0, so it is always safe to call.
+
+**Searching**:
+- Known names/titles/terms: `qmd search "<terms>" -n 10` (BM25, no models).
+- Concepts and fuzzy recall: write a structured query yourself with `intent:` (what to find and what to avoid),
+  plus `lex:` and/or `vec:`:
+  `qmd query $'intent: …\nlex: …\nvec: …' -n 10`.
+- Fetch before you cite: `qmd get "#docid"` / `qmd multi-get "#a,#b"`. Snippets are leads, not evidence.
+  Cite pages as `[[wikilinks]]` as usual, not docids.
+- If model-backed search fails or lags behind recent edits, fall back to `qmd search`, then `grep`.
+- Never add, remove, or re-point collections without the owner's OK: edit `.qmd/index.yml`, then run `--wait`.
+
+Without qmd: `index.md` + `grep -ril` work fine up to a few hundred pages.
+
+---
+
 ## 6. Hard rules
 
 1. **Never modify or delete anything in `10-raw/`.** Never delete any page. Deprecate instead.
@@ -195,7 +232,7 @@ Operation keywords: `ingest`, `query`, `lint`, `repair`, `project`, `review`, `s
 5. **No dangling links**; links are bidirectional.
 6. **Check in before writing** on ingest and before any bulk change (>5 files) or rename.
 7. **Renames/moves**: use `git mv` (or Obsidian) and update every inbound link in the same operation.
-8. **Always update `index.md` and `log.md`** after any write operation.
+8. **Always update `index.md` and `log.md`** after any write operation, then run `scripts/qmd-sync.sh`.
 9. **Read before you write**: open a page before changing it; never overwrite blindly.
 10. If unsure whether something belongs in the vault, ask. Noise is a failure mode too.
 

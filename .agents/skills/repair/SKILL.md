@@ -15,7 +15,8 @@ Only fix what the owner approved. Use the latest report in `50-outputs/lint/` un
    - Note what you did next to the item in the report: `✔ fixed: <how>` (or `✘ skipped: <why>`).
 3. Run `python3 scripts/lint.py` and confirm the fixed items are gone and nothing new broke.
 4. Append to `log.md`: `## [YYYY-MM-DD] repair | items 1-3 from YYYY-MM-DD-lint` with created/updated pages.
-5. Suggest a commit: `git commit -am "repair: <summary>"`.
+5. Run `scripts/qmd-sync.sh` (renames and deprecations must reach the search index).
+6. Suggest a commit: `git commit -am "repair: <summary>"`.
 
 ## Fix patterns
 | Finding | Fix |

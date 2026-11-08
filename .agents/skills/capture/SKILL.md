@@ -17,6 +17,8 @@ Capture never touches `20-wiki/`, `index.md`, or `10-raw/`.
      (`yt-dlp --skip-download --write-auto-subs --sub-format vtt`); otherwise ask the owner to paste the transcript.
    - Pasted text / idea / transcript: use it verbatim.
    - File path: if it is already in `00-inbox/`, there is nothing to do. Otherwise copy (don't move) it into `00-inbox/`.
+   - Already have it? If qmd is installed, `qmd search "<title or url>" -c wiki -c raw -n 3`. If it's already
+     ingested, tell the owner and ask before capturing a duplicate. (The inbox itself is not indexed.)
 2. **Write** `00-inbox/YYYY-MM-DD-short-title.md` (today's date, kebab-case, at most 6 words):
    ```markdown
    ---

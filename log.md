@@ -21,3 +21,6 @@ title: Log
 
 ## [2026-11-08] schema | Removed protect hook
 - removed: .claude/hooks/protect_paths.py, .claude/settings.json · updated: AGENTS.md §2 §6, README.md, prior-art.md, skills ingest + second-brain
+
+## [2026-11-08] schema | Added qmd search integration
+- created: .qmd/index.yml (collections wiki, projects, journal, outputs, raw), scripts/qmd-sync.sh · updated: AGENTS.md §1 §2 §5a §6, skills (sync after write flows, qmd-first search), README.md, .gitignore

@@ -1,0 +1,36 @@
+global_context: "Personal second brain: an LLM-maintained markdown wiki. Wiki pages are the primary, cited knowledge; raw holds original sources."
+collections:
+  wiki:
+    path: ./20-wiki
+    pattern: "**/*.md"
+    context:
+      /: Compiled wiki (primary knowledge, agent-maintained)
+      /concepts: "Concept pages: ideas, methods, frameworks, mental models"
+      /entities: "Entity pages: people, organizations, products, tools, places"
+      /sources: One summary page per ingested source
+      /syntheses: Cross-source analyses, comparisons, filed-back answers
+  projects:
+    path: ./30-projects
+    pattern: "**/*.md"
+    context:
+      /: "Projects: brief.md (intent) and log.md (append-only history) per project"
+  journal:
+    path: ./40-journal
+    pattern: "**/*.md"
+    context:
+      /: Owner's daily notes (YYYY-MM-DD), written by the owner
+  outputs:
+    path: ./50-outputs
+    pattern: queries/**/*.md
+    context:
+      /: Saved answers to past questions and reviews
+  raw:
+    path: ./10-raw
+    pattern: "**/*.md"
+    includeByDefault: false
+    context:
+      /: Original source documents (immutable). Search explicitly with -c raw when the wiki is thin
+models:
+  embed: hf:ggml-org/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf
+  generate: hf:tobil/qmd-query-expansion-1.7B-gguf/qmd-query-expansion-1.7B-q4_k_m.gguf
+  rerank: hf:ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/qwen3-reranker-0.6b-q8_0.gguf

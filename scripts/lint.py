@@ -30,7 +30,7 @@ RAW = "10-raw"
 LINT_DIR = "50-outputs/lint"  # lint reports quote broken links; never scan them
 # Folders whose markdown is scanned for links. Root files index.md / log.md are added explicitly.
 SCAN_DIRS = [WIKI, "30-projects", "40-journal", "50-outputs"]
-SKIP_PARTS = {".git", ".obsidian", ".trash", "node_modules", ".claude", ".agents"}
+SKIP_PARTS = {".git", ".obsidian", ".trash", "node_modules", ".claude", ".agents", ".qmd"}
 
 TYPE_BY_FOLDER = {
     "concepts": "concept",

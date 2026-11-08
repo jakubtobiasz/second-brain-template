@@ -3,3 +3,8 @@
 .obsidian/cache
 .trash/
 .DS_Store
+
+# qmd: config is committed, index is local
+.qmd/index.sqlite*
+.qmd/embed.lock/
+.qmd/embed.log

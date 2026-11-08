@@ -19,6 +19,8 @@ You don't do the work here. You **decide which flow runs, in what order**, and t
    echo "indexed pages: $(grep -c '^- \[\[' index.md)"; \
    grep -q '^- Role / work: *$' 90-system/about.md && echo "profile: EMPTY" || echo "profile: ok"
    ```
+3. Once per session, run `scripts/qmd-sync.sh` to pick up edits the owner made outside the agent (Obsidian,
+   journal). It's a no-op without qmd and embeds in the background.
 
 ## 2. Classify the request
 Match on **intent, not keywords**. Pick the first row that fits.

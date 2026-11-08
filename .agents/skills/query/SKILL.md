@@ -9,9 +9,17 @@ The wiki is the first source, not the raw files and not your general knowledge. 
 
 ## 1. Find
 1. Read `index.md`; pick candidate pages by title/summary.
-2. Widen with search: `grep -ril "<term>\|<synonym>" 20-wiki/ 30-projects/` (and `qmd` if installed).
+2. Widen with search (AGENTS.md §5a):
+   - **qmd installed**: write a structured query yourself; don't paste the owner's sentence:
+     ```bash
+     qmd query $'intent: <what you need, and what to avoid>\nlex: <exact terms, names, aliases>\nvec: <paraphrase in source-like wording>' -n 10
+     ```
+     Exact names/titles → `qmd search "<terms>" -n 10`. Default collections are wiki, projects, journal and outputs;
+     narrow with `-c wiki`. Fetch hits with `qmd multi-get "#id1,#id2"` before relying on them; snippets are leads.
+     If `qmd query`/`vsearch` fails (models, GPU) or the embed hasn't caught up yet, fall back to `qmd search`.
+   - **No qmd**: `grep -ril "<term>\|<synonym>" 20-wiki/ 30-projects/`.
 3. Read the candidates fully, then follow `## Related` links one hop if they look relevant.
-4. Only if the wiki is thin: check `10-raw/` sources directly, and say you did ("the wiki doesn't cover this
+4. Only if the wiki is thin: check `10-raw/` sources directly (`qmd search "<terms>" -c raw`), and say you did ("the wiki doesn't cover this
    yet; from the raw source …"). That gap is itself a finding: suggest ingesting/re-ingesting.
 
 ## 2. Answer
@@ -34,6 +42,7 @@ Substantial = new synthesis, comparison, decision support, or anything over a fe
 Skip saving for quick lookups ("when did I ingest X?").
 - Write `50-outputs/queries/YYYY-MM-DD-short-title.md` from `90-system/templates/query.md`.
 - Append to `log.md`: `## [YYYY-MM-DD] query | <question, shortened>` with a `- saved: 50-outputs/queries/…` line.
+- Run `scripts/qmd-sync.sh` so past answers are searchable.
 
 ## 5. Offer to file back
 End with one line: "Want me to file this back?", with a concrete proposal:
@@ -41,7 +50,7 @@ End with one line: "Want me to file this back?", with a concrete proposal:
 - Specific additions to existing pages (name them).
 
 On "yes": write it like an ingest (citations, `sources:`, bidirectional links, `index.md`, `log.md` entry
-`## [YYYY-MM-DD] query | filed back: <title>`), and set `filed_back: true` in the saved query file.
+`## [YYYY-MM-DD] query | filed back: <title>`), and set `filed_back: true` in the saved query file. Then run `scripts/qmd-sync.sh`.
 Synthesis pages cite the wiki source pages behind them, not the query file.
 
 ## Hard constraints

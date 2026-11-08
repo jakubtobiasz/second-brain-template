@@ -20,7 +20,9 @@ description: Set up or refresh the second brain for its owner. Interview them (o
 ## 2. Environment check (report, don't change system settings)
 - `git status`: is it a repo? If not, offer `git init`.
 - `python3 --version` (the linter needs 3.8+), and run `python3 scripts/lint.py` once.
-- Optional tools: `yt-dlp` (video capture), `qmd` (search at scale). Mention, don't install unasked.
+- Optional tools: `yt-dlp` (video capture), `qmd` (local hybrid search). Mention, don't install unasked.
+- If `qmd` is installed: run `scripts/qmd-sync.sh --wait` once. It builds the project-local index from
+  `.qmd/index.yml`; the first run downloads the embedding model (~300 MB, about a minute).
 - Obsidian (optional): suggest *Open folder as vault*, Templates folder = `90-system/templates`,
   Attachment folder = `10-raw/assets`, Web Clipper saving into `00-inbox/`.
 

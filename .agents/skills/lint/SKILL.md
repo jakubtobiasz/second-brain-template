@@ -9,6 +9,7 @@ description: Health-check the second brain. Run the mechanical linter (scripts/l
 
 ## 1. Mechanical pass
 ```bash
+scripts/qmd-sync.sh --wait     # fresh search index for the semantic pass (no-op without qmd)
 python3 scripts/lint.py --write
 ```
 This saves `50-outputs/lint/YYYY-MM-DD-lint.md` with errors, warnings, and notes: broken links, frontmatter,
@@ -22,7 +23,8 @@ Fill the report's `## Semantic review (agent)` section. Don't read every page: s
 - **Uncited claims**: specific numbers, dates, quotes without a nearby `[[source]]`. Spot-check ~10 pages,
   prioritizing `stable` pages and the most-linked hubs.
 - **Lost caveats**: compare 2-3 recently ingested source pages with their raw files. Did hedges survive?
-- **Scatter**: several pages covering one topic (merge candidates); **bloat**: one page covering many (split candidates).
+- **Scatter**: several pages covering one topic (merge candidates). With qmd, run a `vec:` query per hub page
+  title and look for near-duplicate hits in `-c wiki`; **bloat**: one page covering many (split candidates).
 - **Superseded state**: newer sources that changed a fact while other pages still describe the old one.
 - **Missing pages**: people/concepts mentioned on 3+ pages without their own page.
 - **Next questions & sources**: 3-5 questions the wiki can almost answer, plus the source that would close each gap.
