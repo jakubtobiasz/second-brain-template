@@ -18,3 +18,6 @@ title: Log
 
 ## [2026-11-08] schema | Added second-brain router skill
 - created: .agents/skills/second-brain/SKILL.md · updated: AGENTS.md §4, README.md
+
+## [2026-11-08] schema | Removed protect hook
+- removed: .claude/hooks/protect_paths.py, .claude/settings.json · updated: AGENTS.md §2 §6, README.md, prior-art.md, skills ingest + second-brain

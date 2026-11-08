@@ -63,7 +63,7 @@ Common chains:
 Chaining rules:
 - **Stop at every owner decision point** (ingest check-in, lint → repair, file-back, brief edits). Never treat the
   chain's announcement as approval for the gated steps.
-- If a step fails or is blocked (e.g. the protect hook), stop the chain, report where you stopped and why, and
+- If a step fails or is blocked, stop the chain, report where you stopped and why, and
   offer to resume.
 - More than 5 inbox items or more than 3 flows: confirm scope first ("12 items in the inbox. Do all, or the 3 oldest?").
 

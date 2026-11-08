@@ -44,10 +44,8 @@ source page with `status: deprecated` and a one-line reason. Nothing is deleted.
 ## 4. Archive the original
 - Target: `10-raw/YYYY-MM-DD-short-title.<ext>` (date = **today**, the ingest date).
 - Attachments first: move them to `10-raw/assets/` and fix their relative paths **while the file is still in
-  `00-inbox/`**. Once a file is in `10-raw/` it is immutable, and the hook blocks edits to it.
+  `00-inbox/`**. Once a file is in `10-raw/` it is immutable.
 - Then `mv -n "00-inbox/<file>" "10-raw/<new-name>"` (`-n` = never overwrite). If the name is taken, add `-2`.
-- The protect hook allows moving *into* `10-raw/` but blocks edits/moves of existing files there. If you get
-  blocked, stop and tell the owner; don't work around it.
 
 ## 5. Write the wiki
 1. **Source page** `20-wiki/sources/<short-title>.md` from `90-system/templates/source.md`.

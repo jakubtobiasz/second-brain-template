@@ -51,7 +51,7 @@ Do **not** read the whole wiki. Navigate index first, then open only the pages y
 │   └── templates/
 ├── scripts/lint.py      # mechanical health check (stdlib Python)
 ├── .agents/skills/      # operation procedures (second-brain router + capture, ingest, query, …)
-└── .claude/             # settings.json, hooks/protect_paths.py, skills -> ../.agents/skills (symlink)
+└── .claude/skills       # symlink -> ../.agents/skills (for Claude Code)
 ```
 
 | Location | Owner writes | Agent writes | Notes |
@@ -199,12 +199,8 @@ Operation keywords: `ingest`, `query`, `lint`, `repair`, `project`, `review`, `s
 9. **Read before you write**: open a page before changing it; never overwrite blindly.
 10. If unsure whether something belongs in the vault, ask. Noise is a failure mode too.
 
-**Enforcement.** Rules 1-2 are enforced in Claude Code by a PreToolUse hook
-(`.claude/hooks/protect_paths.py`, wired in `.claude/settings.json`). `10-raw/` may only grow: moving or
-writing a *new* file in is allowed, but editing, overwriting, deleting, or moving out is blocked. `40-journal/` is
-fully read-only for the agent. If the hook blocks you, do not work around it: tell the owner what you
-wanted to do and why. Other agents (Codex, OpenCode) don't run the hook, so follow the rules anyway; the
-linter's `raw-modified` check catches violations after the fact.
+**Enforcement.** Rules 1-2 rely on you. The linter's `raw-modified` check (git) catches edits to
+`10-raw/` after the fact.
 
 Version control: the vault is a git repo. Suggest a commit after each operation
 (`ingest: <title>`, `lint: 2026-01-15`) so every change is reviewable with `git diff`.

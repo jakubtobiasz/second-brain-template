@@ -70,7 +70,7 @@ Each flow is a skill in [`.agents/skills/`](.agents/skills/) (Codex, OpenCode), 
 90-system/     profile, templates, prior art
 scripts/       lint.py: mechanical health check
 .agents/skills/ the operation procedures (one SKILL.md per flow)
-.claude/       hook protecting 10-raw/ + 40-journal/; skills -> ../.agents/skills
+.claude/skills symlink -> ../.agents/skills (Claude Code)
 index.md       catalog: the agent reads it first
 log.md         append-only timeline
 AGENTS.md      the rulebook (CLAUDE.md imports it)
@@ -83,9 +83,6 @@ All rules live in [`AGENTS.md`](AGENTS.md). Change them there, and add discoveri
 - **Linter**: `python3 scripts/lint.py` (add `--write` to save a report, `--json` for tooling). Checks broken
   links, frontmatter, index coverage, orphans, one-way links, duplicates, stale pages and inbox items, and
   in a git repo whether any file in `10-raw/` was modified. Exits 1 on errors, so it can run in CI or a pre-commit hook.
-- **Protect hook** (Claude Code): `.claude/hooks/protect_paths.py` blocks the agent from editing, overwriting,
-  deleting, or moving files in `10-raw/`, and from writing to `40-journal/`. Adding new sources still works.
-  You can always edit those folders yourself.
 
 ## Tips
 
