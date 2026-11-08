@@ -12,3 +12,6 @@ title: Log
 
 ## [2026-11-08] schema | Added linter and protect hook
 - created: scripts/lint.py, .claude/hooks/protect_paths.py, .claude/settings.json · updated: AGENTS.md (§2, §4.4, §6), README.md
+
+## [2026-11-08] schema | Added operation skills
+- created: .agents/skills/{capture,ingest,query,lint,repair,project,brain-review,setup}/SKILL.md, .claude/skills → ../.agents/skills (symlink) · updated: AGENTS.md (§2, §4 now summarizes skills), README.md

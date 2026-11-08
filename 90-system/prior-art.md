@@ -44,5 +44,5 @@ Research done 2026-11-08 (Exa, ~100 sources reviewed). Used to design `AGENTS.md
 - ~~Script-based linter~~: done (`scripts/lint.py`).
 - ~~Hook that blocks writes to `10-raw/` and `40-journal/`~~: done (`.claude/hooks/protect_paths.py`).
 - Lock on `index.md` / `log.md` if several agent sessions write in parallel ([Krenin](https://dev.to/krenin88/an-llm-wiki-that-keeps-context-when-the-session-ends-283i)).
-- Operations as skills (`.claude/skills/ingest/SKILL.md` …) once the flows stabilize.
+- ~~Operations as skills~~: done (`.agents/skills/`, symlinked as `.claude/skills`).
 - qmd search once `index.md` gets large.

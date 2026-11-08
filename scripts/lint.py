@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Deterministic health check for the Second Brain vault.
 
-Report-only: it never modifies wiki pages. See AGENTS.md section 4.4.
+Report-only: it never modifies wiki pages. See .agents/skills/lint/SKILL.md.
 
 Usage:
     python3 scripts/lint.py            # print report to stdout
@@ -30,7 +30,7 @@ RAW = "10-raw"
 LINT_DIR = "50-outputs/lint"  # lint reports quote broken links; never scan them
 # Folders whose markdown is scanned for links. Root files index.md / log.md are added explicitly.
 SCAN_DIRS = [WIKI, "30-projects", "40-journal", "50-outputs"]
-SKIP_PARTS = {".git", ".obsidian", ".trash", "node_modules", ".claude"}
+SKIP_PARTS = {".git", ".obsidian", ".trash", "node_modules", ".claude", ".agents"}
 
 TYPE_BY_FOLDER = {
     "concepts": "concept",

@@ -50,7 +50,8 @@ Do **not** read the whole wiki. Navigate index first, then open only the pages y
 │   ├── about.md
 │   └── templates/
 ├── scripts/lint.py      # mechanical health check (stdlib Python)
-└── .claude/             # settings.json + hooks/protect_paths.py (guards 10-raw/, 40-journal/)
+├── .agents/skills/      # operation procedures (capture, ingest, query, lint, repair, project, brain-review, setup)
+└── .claude/             # settings.json, hooks/protect_paths.py, skills -> ../.agents/skills (symlink)
 ```
 
 | Location | Owner writes | Agent writes | Notes |
@@ -61,7 +62,7 @@ Do **not** read the whole wiki. Navigate index first, then open only the pages y
 | `30-projects/` | yes | yes | `brief.md` = intent (owner approves changes); `log.md` = append-only |
 | `40-journal/` | yes | **no** (read-only) | Agent may *link to* and *extract from* journal entries, never rewrite them |
 | `50-outputs/` | — | yes | Agent writes; owner reviews |
-| `90-system/` | yes | only with explicit OK | Profile and templates change rarely and deliberately |
+| `90-system/`, `.agents/skills/` | yes | only with explicit OK | Profile, templates, and procedures change rarely and deliberately |
 | `index.md`, `log.md` | — | yes | Updated after every write operation |
 
 ---
@@ -129,84 +130,39 @@ updated: 2026-01-01
 
 ## 4. Operations
 
-The owner triggers operations in plain language ("ingest the new stuff", "what do I know about X?",
-"check vault health"). Map the request to one of these flows. When in doubt, ask.
+The owner triggers operations in plain language. Each operation has a **skill** with the full procedure in
+`.agents/skills/<name>/SKILL.md` (also reachable as `.claude/skills/` through a symlink). Load the skill when its
+flow starts. The summaries below are the contract; the skills are the step-by-step.
 
-### 4.1 Capture (owner, any time)
-The owner drops anything into `00-inbox/`: web clips (Obsidian Web Clipper), PDFs, transcripts, quick notes,
-links. No formatting required. The inbox is the only place that needs zero discipline.
+| Skill | Trigger (examples) | What it does |
+|---|---|---|
+| `capture` | "save this", "clip this URL" | Verbatim copy into `00-inbox/` with metadata. No wiki changes |
+| `ingest` | "ingest", "process the inbox" | One source at a time: read → map → **check in** → archive to `10-raw/` → source page + updates to 5-15 pages with links both ways → index + log |
+| `query` | "what do I know about X?" | Index first → answer with `[[citations]]` + required **Gaps** → save if substantial → offer to file back into the wiki |
+| `lint` | "check vault health" | `scripts/lint.py --write` + semantic review → ranked report in `50-outputs/lint/`. **Report only** |
+| `repair` | "fix 1-3" | Applies owner-approved lint items one at a time, re-lints, logs |
+| `project` | "start / update / close project X" | `30-projects/<name>/brief.md` (intent, owner approves edits) + append-only `log.md` |
+| `brain-review` | "weekly review" | Reads journal, log, inbox, projects → proposes promotions, open loops, focus. Applies nothing |
+| `setup` | "set up my profile" | Interviews the owner into `90-system/about.md`, checks the environment, guides the first ingest |
 
-### 4.2 Ingest: inbox → raw + wiki
-Process **one source at a time** unless the owner explicitly asks for a batch.
+### Contracts every skill honours
+- **Capture is free-form.** The owner drops anything in `00-inbox/`. It is the only place without discipline.
+- **Ingest checks in before writing** (unless `about.md` says `auto`), processes **one source at a time**, and never
+  leaves a page without citations, index line, or back-links.
+- **Query never presents general knowledge as vault knowledge**, always ends with Gaps, and changes the wiki only
+  through an approved file-back.
+- **Lint never fixes.** Repair only touches approved items.
+- **Projects**: brief = what it was supposed to be; log = what it became. Lasting knowledge gets filed into `20-wiki/`.
+- **Reviews propose**; the owner decides. `40-journal/` is never edited.
 
-1. **Read** the source fully. For images, read the text first, then view key images.
-2. **Map** what it touches: existing pages to update, new pages to create, contradictions with current wiki.
-3. **Check in**: show the owner a short plan before writing:
-   ```
-   Source: <title>. 3 key takeaways
-   Update: [[page-a]] (adds X), [[page-b]] (contradicts Y)
-   Create: [[new-concept]] (seed), [[person-z]] (entity)
-   Skip:   <what you're ignoring and why>
-   ```
-   Wait for a go-ahead (the owner may say "auto" to skip check-ins for the session).
-4. **Archive**: move the file to `10-raw/YYYY-MM-DD-short-title.ext` (date = ingest date). Move attachments to `10-raw/assets/`.
-5. **Write**: create `20-wiki/sources/<short-title>.md` (from `90-system/templates/source.md`), then update or create
-   every page in the plan, with links both ways. A substantial source usually touches 5-15 pages. If it
-   touches fewer than 3, say why.
-6. **Bookkeep**: update `index.md`, append to `log.md`.
-7. **Report**: list pages created/updated and any open questions raised.
-
-Out-of-scope or low-value items: tell the owner, and on approval move them to `10-raw/` with a source page
-marked `status: deprecated` and a one-line reason (nothing is deleted).
-
-### 4.3 Query: ask the wiki
-1. Read `index.md`, pick candidate pages, read them. Fall back to `10-raw/` only if the wiki is thin, and say so.
-2. Answer with inline citations as `[[wikilinks]]` to the pages used.
-3. End every substantial answer with **Gaps**: what the wiki could not answer, and which source would fill it.
-4. If the answer is substantial (new synthesis, comparison, decision support), save it to
-   `50-outputs/queries/YYYY-MM-DD-short-title.md` (template `query.md`) and log it.
-5. Offer to **file back**: promote durable insight into `20-wiki/syntheses/` or into existing pages.
-   Exploration should compound, not evaporate.
-
-### 4.4 Lint: health check (weekly or monthly)
-Report-only. **Never fix during lint.** Two passes:
-
-1. **Mechanical**: run `python3 scripts/lint.py --write`. It checks links, frontmatter, index coverage,
-   orphans, one-way links, duplicates, stale seeds/state/inbox, and (in git) edits to `10-raw/`, then saves
-   `50-outputs/lint/YYYY-MM-DD-lint.md`. Do not re-check by hand what the script already covers.
-2. **Semantic**: fill the report's *Semantic review* section with what a script can't see: contradictions,
-   uncited or suspicious claims, caveats lost in summaries, pages that should be merged or split, questions to explore.
-
-Findings are ranked:
-
-- **Errors**: broken `[[links]]`, pages missing from `index.md`, missing/invalid frontmatter, edits inside
-  `10-raw/`, contradictions without a `## Contradictions` section, claims with no source.
-- **Warnings**: orphan pages (no inbound links), one-way links, duplicate/overlapping pages (merge candidates),
-  stale `state` facts (as-of date > 6 months), `seed` pages older than 60 days, inbox items older than 14 days.
-- **Notes**: frequently mentioned concepts/people without a page, suggested questions to explore, sources to find.
-
-Then stop and let the owner pick what to fix.
-Fixes run as a separate **Repair** pass, one approved item at a time, each logged.
-
-### 4.5 Project work
-- **Start**: create `30-projects/<project>/` with `brief.md` (template `project-brief.md`). Interview the owner
-  section by section. Push back on vague answers ("everyone" is not a segment). "Unknown" is valid: record it
-  as an open question. Add the project to `index.md`.
-- **Update**: after meaningful work, append to the project's `log.md` (what happened, decisions, next steps),
-  save artefacts in the project folder, refresh the project's row in `index.md`.
-  Knowledge that outlives the project gets filed into `20-wiki/`.
-- **Close**: set `status: archived` in the brief, write a short retrospective at the end of `log.md`, file
-  lessons into the wiki.
-
-### 4.6 Journal and reviews
-- The owner writes `40-journal/YYYY-MM-DD.md` (template `daily.md`). You never edit it.
-- **Daily/weekly review** (on request): read recent journal entries + `log.md`, then propose (don't apply):
-  ideas worth promoting to the wiki, tasks to move into projects, people/concepts that deserve pages,
-  inbox items waiting. Open loops become `- [ ]` checkboxes in the review output.
-
-### 4.7 Corrections and rule changes
+### Corrections and rule changes
 When the owner corrects you ("no, that's wrong", "always do X"), fix the content, then propose a one-line
 addition to **§7 Learned conventions** below. Keep that list short. Merge or prune instead of growing it.
+If a correction concerns a procedure, propose an edit to that skill's `SKILL.md` instead.
+
+### Adding a skill
+Create `.agents/skills/<name>/SKILL.md` (frontmatter `name` + a `description` saying *when* to use it), add a row
+to the table above, and log it as `schema`. `.claude/skills` is a symlink to that folder, so there is nothing to copy.
 
 ---
 

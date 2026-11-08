@@ -14,7 +14,7 @@ git clone <this-repo> my-brain && cd my-brain
 claude        # or: codex / opencode
 ```
 
-1. Say **"set up my profile"**. The agent interviews you and fills `90-system/about.md`.
+1. Say **"set up my profile"** (or `/setup`). The agent interviews you and fills `90-system/about.md`.
 2. Open the folder in [Obsidian](https://obsidian.md) as a vault (optional but recommended). Set the
    templates folder to `90-system/templates` and the attachment folder to `10-raw/assets`.
 3. Drop something into `00-inbox/` and say **"ingest the inbox"**.
@@ -43,15 +43,19 @@ flowchart LR
 
 ## Things to say
 
-| Say | What happens |
-|---|---|
-| "ingest the inbox" / "ingest `<file>`" | Plan → your OK → archive to `10-raw/` → wiki pages + index + log |
-| "what do I know about X?" | Answer from the wiki, cited, with a **Gaps** section; saved if substantial |
-| "file that back" | Turns the last answer into a synthesis page |
-| "check vault health" | Lint report in `50-outputs/lint/`, ranked, with no changes made |
-| "fix lint items 1-3" | Repairs, one at a time, logged |
-| "start project X" / "update project X" | Brief interview / log entry + index refresh |
-| "weekly review" | Proposes what to promote from journal & inbox |
+Each flow is a skill in [`.agents/skills/`](.agents/skills/) (Codex, OpenCode), symlinked as `.claude/skills`
+(Claude Code). Skills trigger from plain language, or you can call them directly, e.g. `/ingest`.
+
+| Say | Skill | What happens |
+|---|---|---|
+| "save this `<url>`" | `capture` | Verbatim copy into `00-inbox/` with metadata |
+| "ingest the inbox" / "ingest `<file>`" | `ingest` | Plan → your OK → archive to `10-raw/` → wiki pages + index + log |
+| "what do I know about X?" | `query` | Answer from the wiki, cited, with a **Gaps** section; saved if substantial; offers file-back |
+| "check vault health" | `lint` | Linter + semantic review → ranked report in `50-outputs/lint/`, with no changes made |
+| "fix lint items 1-3" | `repair` | Approved fixes, one at a time, re-linted and logged |
+| "start / update / close project X" | `project` | Brief interview / log entry + index refresh / retrospective |
+| "weekly review" | `brain-review` | Proposes what to promote from journal & inbox, open loops, focus |
+| "set up my profile" | `setup` | Fills `90-system/about.md`, checks tools, guides the first ingest |
 
 ## Layout
 
@@ -64,7 +68,8 @@ flowchart LR
 50-outputs/    saved answers & lint reports
 90-system/     profile, templates, prior art
 scripts/       lint.py: mechanical health check
-.claude/       hook that protects 10-raw/ and 40-journal/
+.agents/skills/ the operation procedures (one SKILL.md per flow)
+.claude/       hook protecting 10-raw/ + 40-journal/; skills -> ../.agents/skills
 index.md       catalog: the agent reads it first
 log.md         append-only timeline
 AGENTS.md      the rulebook (CLAUDE.md imports it)
