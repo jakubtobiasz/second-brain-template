@@ -1,0 +1,72 @@
+{
+  "collapse-filter": false,
+  "search": "-path:90-system -path:00-inbox -file:log -file:index",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:20-wiki/concepts",
+      "color": {
+        "a": 1,
+        "rgb": 5214199
+      }
+    },
+    {
+      "query": "path:20-wiki/entities",
+      "color": {
+        "a": 1,
+        "rgb": 4174463
+      }
+    },
+    {
+      "query": "path:20-wiki/sources",
+      "color": {
+        "a": 1,
+        "rgb": 11908533
+      }
+    },
+    {
+      "query": "path:20-wiki/syntheses",
+      "color": {
+        "a": 1,
+        "rgb": 13007069
+      }
+    },
+    {
+      "query": "path:30-projects",
+      "color": {
+        "a": 1,
+        "rgb": 15049533
+      }
+    },
+    {
+      "query": "path:40-journal",
+      "color": {
+        "a": 1,
+        "rgb": 14707829
+      }
+    },
+    {
+      "query": "path:50-outputs",
+      "color": {
+        "a": 1,
+        "rgb": 5682882
+      }
+    }
+  ],
+  "collapse-display": true,
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1,
+  "collapse-forces": true,
+  "centerStrength": 0.5,
+  "repelStrength": 10,
+  "linkStrength": 1,
+  "linkDistance": 250,
+  "scale": 1,
+  "close": true
+}

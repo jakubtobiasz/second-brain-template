@@ -1,7 +1,7 @@
 ---
 type: index
 title: Index
-updated: 2026-11-08
+updated: YYYY-MM-DD
 ---
 
 # Index

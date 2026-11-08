@@ -1,6 +1,6 @@
 ---
 name: second-brain
-description: Entry point and router for any request about the second brain vault. Work out what the owner wants and run the right flow (capture, ingest, query, lint, repair, project, brain-review, setup), chaining several when needed. Use when a request is vague or spans several steps ("deal with my inbox", "add this and tell me how it fits", "what should I do next?", "help me with my notes", "/second-brain"), when it's unclear which flow applies, or at the start of a session in this vault.
+description: Entry point and router for any request about the second brain vault. Work out what the owner wants and run the right flow (capture, ingest, query, lint, repair, project, brain-review, gap-finder, setup), chaining several when needed. Use when a request is vague or spans several steps ("deal with my inbox", "add this and tell me how it fits", "what should I do next?", "help me with my notes", "/second-brain"), when it's unclear which flow applies, or at the start of a session in this vault.
 ---
 
 # Second Brain: router
@@ -36,6 +36,7 @@ Match on **intent, not keywords**. Pick the first row that fits.
 | Fix specific problems | "fix 1-3", "merge X and Y", "fix broken links", approves lint items | `repair` |
 | Work on a project | project name from `index.md` › Projects, "start/update/close project", "where are we on X", "log what we did" | `project` |
 | Step back | "review", "what's on my plate", "what did I miss", "plan my week", "process my journal" | `brain-review` |
+| Grow the knowledge | "what should I read next", "knowledge gaps", "what's missing", "find sources for X" | `gap-finder` |
 | Nothing specific | "what should I do?", "help with my brain", bare `/second-brain` | §4 Suggest |
 
 **Ambiguous?** Ask **one** short question with the 2 most likely flows as options, e.g.
@@ -61,6 +62,7 @@ Common chains:
 | "Weekly maintenance" | `brain-review` → `lint` → then offer `ingest` for the inbox |
 | "Research X for project Y" | `query` → file-back → `project` update (link the synthesis in the project log) |
 | "Start project X based on my notes" | `query` (context on X) → `project` start (pre-fill the brief, then interview) |
+| "Find and add sources on my gaps" | `gap-finder` → (owner picks gaps + sources) → `capture` → `ingest` × N |
 
 Chaining rules:
 - **Stop at every owner decision point** (ingest check-in, lint → repair, file-back, brief edits). Never treat the
@@ -76,7 +78,7 @@ Use the snapshot from §1 and propose **the top 1-3** actions, highest first:
 3. Last lint more than 30 days ago (or never, and the index has 10+ pages) → `lint`.
 4. Last review more than 7 days ago → `brain-review`.
 5. Active project with no log entry for more than 14 days → `project` resume.
-6. Otherwise → suggest a `query` on the current focus from `about.md`, or capturing sources for its open questions.
+6. Otherwise → `gap-finder` (what to read next for the current focus), or a `query` on the current focus.
 
 Present them as a short numbered list and ask which to run.
 

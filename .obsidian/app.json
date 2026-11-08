@@ -1,0 +1,13 @@
+{
+  "attachmentFolderPath": "10-raw/assets",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "00-inbox",
+  "newLinkFormat": "shortest",
+  "useMarkdownLinks": false,
+  "alwaysUpdateLinks": true,
+  "showUnsupportedFiles": true,
+  "userIgnoreFilters": [
+    "90-system/templates/",
+    "50-outputs/lint/"
+  ]
+}

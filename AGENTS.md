@@ -50,11 +50,18 @@ the pages you need.
 ├── 90-system/           # profile, templates, prior art
 │   ├── about.md
 │   └── templates/
-├── scripts/lint.py      # mechanical health check (stdlib Python)
-├── scripts/qmd-sync.sh  # refresh the local qmd search index (no-op without qmd)
-├── .qmd/index.yml       # qmd collections (committed); the index database is local and gitignored
+├── scripts/
+│   ├── lint.py          # mechanical health check (stdlib Python)
+│   ├── gaps.py          # collects knowledge-gap signals for the gap-finder skill
+│   ├── check-skills.py  # validates skill frontmatter + the .claude/skills symlink
+│   └── qmd-sync.sh      # refresh the local qmd search index (no-op without qmd)
 ├── .agents/skills/      # operation procedures (second-brain router + capture, ingest, query, …)
-└── .claude/skills       # symlink -> ../.agents/skills (for Claude Code)
+├── .claude/skills       # symlink -> ../.agents/skills (for Claude Code)
+├── .qmd/index.yml       # qmd collections (committed); the index database is local and gitignored
+├── .mcp.json            # project MCP server `brain` = qmd over this vault's local index
+├── .obsidian/           # preset vault config (templates, daily notes, attachments, graph colours)
+├── .githooks/pre-commit # opt-in: blocks commits with lint errors (git config core.hooksPath .githooks)
+└── .github/workflows/   # CI: lint + skills check on every push/PR
 ```
 
 | Location | Owner writes | Agent writes | Notes |
@@ -148,6 +155,7 @@ flow starts. The summaries below are the contract; the skills are the step-by-st
 | `repair` | "fix 1-3" | Applies owner-approved lint items one at a time, re-lints, logs |
 | `project` | "start / update / close project X" | `30-projects/<name>/brief.md` (intent, owner approves edits) + append-only `log.md` |
 | `brain-review` | "weekly review" | Reads journal, log, inbox, projects → proposes promotions, open loops, focus. Applies nothing |
+| `gap-finder` | "what should I read next?" | `scripts/gaps.py` signals → clustered, ranked against current focus → reading list in `50-outputs/queries/`. Captures nothing without OK |
 | `setup` | "set up my profile" | Interviews the owner into `90-system/about.md`, checks the environment, guides the first ingest |
 
 ### Contracts every skill honours
@@ -185,7 +193,7 @@ rename, or deprecate. When it grows past ~300 lines, split into per-section inde
 - created: [[a]], [[b]] · updated: [[c]], [[d]] · raw: 10-raw/2026-01-15-title.pdf
 ```
 
-Operation keywords: `ingest`, `query`, `lint`, `repair`, `project`, `review`, `schema`, `setup`.
+Operation keywords: `ingest`, `query`, `lint`, `repair`, `project`, `review`, `gaps`, `schema`, `setup`.
 
 ---
 
@@ -218,6 +226,10 @@ foreground; `--status` shows index health. Without qmd it prints a note and exit
   Cite pages as `[[wikilinks]]` as usual, not docids.
 - If model-backed search fails or lags behind recent edits, fall back to `qmd search`, then `grep`.
 - Never add, remove, or re-point collections without the owner's OK: edit `.qmd/index.yml`, then run `--wait`.
+
+**MCP**: `.mcp.json` registers a project server `brain` (`qmd mcp` started from the vault root, so it serves this
+index). When its tools are available (`mcp__brain__query`, `get`, `multi_get`, `status`), prefer them over the CLI
+for searching. Use the CLI for `scripts/qmd-sync.sh`. Note: a global qmd MCP server reads a different index.
 
 Without qmd: `index.md` + `grep -ril` work fine up to a few hundred pages.
 

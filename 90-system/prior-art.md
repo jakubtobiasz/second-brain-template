@@ -41,6 +41,8 @@ Research done 2026-11-08 (Exa, ~100 sources reviewed). Used to design `AGENTS.md
 - Noise: the agent records too much ([Vellum](https://dev.to/vellumkasane/four-things-that-broke-when-i-ran-karpathys-llm-wiki-with-claude-code-and-the-fixes-4h4f)). → *Hard rule 10.*
 
 ## Ideas for later
+- ~~Gap finder (claude-llm-wiki `/wiki:next`)~~: done (`gap-finder` skill + `scripts/gaps.py`).
+- ~~CI + pre-commit lint~~: done (`.github/workflows/lint.yml`, `.githooks/pre-commit`).
 - ~~Script-based linter~~: done (`scripts/lint.py`).
 - Hook that blocks agent writes to `10-raw/` and `40-journal/` (tried, removed 2026-11-08; revisit if raw edits become a problem).
 - Lock on `index.md` / `log.md` if several agent sessions write in parallel ([Krenin](https://dev.to/krenin88/an-llm-wiki-that-keeps-context-when-the-session-ends-283i)).

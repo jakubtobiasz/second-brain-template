@@ -1,0 +1,21 @@
+name: lint
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  vault:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Vault lint (links, frontmatter, index coverage)
+        run: |
+          python3 scripts/lint.py > lint-report.md || status=$?
+          cat lint-report.md >> "$GITHUB_STEP_SUMMARY"
+          exit ${status:-0}
+      - name: Skills check
+        run: python3 scripts/check-skills.py

@@ -23,12 +23,20 @@ description: Set up or refresh the second brain for its owner. Interview them (o
 - Optional tools: `yt-dlp` (video capture), `qmd` (local hybrid search). Mention, don't install unasked.
 - If `qmd` is installed: run `scripts/qmd-sync.sh --wait` once. It builds the project-local index from
   `.qmd/index.yml`; the first run downloads the embedding model (~300 MB, about a minute).
-- Obsidian (optional): suggest *Open folder as vault*, Templates folder = `90-system/templates`,
-  Attachment folder = `10-raw/assets`, Web Clipper saving into `00-inbox/`.
+- Obsidian (optional): *Open folder as vault*. `.obsidian/` is preconfigured (templates, daily notes in
+  `40-journal/`, new notes and attachments, graph colours by page type). Suggest Web Clipper saving into `00-inbox/`.
+- qmd MCP: if qmd is installed, Claude Code will ask to approve the project server `brain` from `.mcp.json`.
+- Pre-commit hook (opt-in): offer `git config core.hooksPath .githooks` (blocks commits with lint errors).
+  Run it only on the owner's yes.
 
 ## 3. First run (offer)
 "Drop 1-3 articles on one topic into `00-inbox/` (or give me URLs and I'll capture them), and I'll ingest
 the first one with you." Then follow the `capture` / `ingest` skills.
 
-## 4. Log
+## 4. First-time initialisation (fresh template only)
+If `log.md` has no entries yet:
+- Replace the `YYYY-MM-DD` placeholders in `index.md` and `90-system/about.md` frontmatter with today's date.
+- Append the first entry: `## [YYYY-MM-DD] setup | vault initialized`.
+
+## 5. Log
 `## [YYYY-MM-DD] setup | profile created` (or `profile updated: <sections>`).

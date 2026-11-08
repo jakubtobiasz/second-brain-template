@@ -1,0 +1,6 @@
+{
+  "folder": "40-journal",
+  "format": "YYYY-MM-DD",
+  "template": "90-system/templates/daily",
+  "autorun": false
+}

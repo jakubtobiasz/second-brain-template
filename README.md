@@ -9,14 +9,17 @@ with ideas from [super-brain](https://github.com/superhero-tech/super-brain) and
 
 ## Quick start
 
+Click **Use this template** on GitHub (keep your brain private), then:
+
 ```bash
-git clone <this-repo> my-brain && cd my-brain
+git clone https://github.com/<you>/<your-brain>.git my-brain && cd my-brain
 claude        # or: codex / opencode
 ```
 
-1. Say **"set up my profile"** (or `/setup`). The agent interviews you and fills `90-system/about.md`.
-2. Open the folder in [Obsidian](https://obsidian.md) as a vault (optional but recommended). Set the
-   templates folder to `90-system/templates` and the attachment folder to `10-raw/assets`.
+1. Say **"set up my profile"** (or `/setup`). The agent interviews you, fills `90-system/about.md`, and
+   initialises the vault.
+2. Open the folder in [Obsidian](https://obsidian.md) as a vault (optional but recommended). It comes
+   preconfigured: templates, daily notes in `40-journal/`, new notes in the inbox, graph colours by page type.
 3. Drop something into `00-inbox/` and say **"ingest the inbox"**.
 
 ## How it works
@@ -56,6 +59,7 @@ Each flow is a skill in [`.agents/skills/`](.agents/skills/) (Codex, OpenCode), 
 | "fix lint items 1-3" | `repair` | Approved fixes, one at a time, re-linted and logged |
 | "start / update / close project X" | `project` | Brief interview / log entry + index refresh / retrospective |
 | "weekly review" | `brain-review` | Proposes what to promote from journal & inbox, open loops, focus |
+| "what should I read next?" | `gap-finder` | Ranked knowledge gaps for your current focus + how to close each |
 | "set up my profile" | `setup` | Fills `90-system/about.md`, checks tools, guides the first ingest |
 
 ## Layout
@@ -68,8 +72,12 @@ Each flow is a skill in [`.agents/skills/`](.agents/skills/) (Codex, OpenCode), 
 40-journal/    daily notes (you)
 50-outputs/    saved answers & lint reports
 90-system/     profile, templates, prior art
-scripts/       lint.py (health check), qmd-sync.sh (search index)
+scripts/       lint.py, gaps.py, check-skills.py, qmd-sync.sh
 .qmd/          qmd collection config (index itself is local)
+.mcp.json      MCP server "brain": qmd over this vault
+.obsidian/     preset Obsidian config
+.githooks/     opt-in pre-commit lint
+.github/       CI: lint + skills check
 .agents/skills/ the operation procedures (one SKILL.md per flow)
 .claude/skills symlink -> ../.agents/skills (Claude Code)
 index.md       catalog: the agent reads it first
@@ -83,7 +91,11 @@ All rules live in [`AGENTS.md`](AGENTS.md). Change them there, and add discoveri
 
 - **Linter**: `python3 scripts/lint.py` (add `--write` to save a report, `--json` for tooling). Checks broken
   links, frontmatter, index coverage, orphans, one-way links, duplicates, stale pages and inbox items, and
-  in a git repo whether any file in `10-raw/` was modified. Exits 1 on errors, so it can run in CI or a pre-commit hook.
+  in a git repo whether any file in `10-raw/` was modified. Exits 1 on errors.
+- **CI**: `.github/workflows/lint.yml` runs the linter and `scripts/check-skills.py` on every push and PR; the
+  lint report shows up in the run summary.
+- **Pre-commit hook (opt-in)**: `git config core.hooksPath .githooks` blocks commits that add lint errors
+  (`git commit --no-verify` to skip once).
 
 ## Search with qmd (optional)
 
@@ -103,6 +115,9 @@ qmd search "zettelkasten" -n 5                       # keywords
 qmd query $'intent: …\nvec: …' -n 10                # semantic
 scripts/qmd-sync.sh --status                          # index health
 ```
+
+`.mcp.json` also registers a project MCP server named `brain` (`qmd mcp` run from the vault root), so Claude
+Code gets native search tools over *this* vault. Approve it when Claude Code asks.
 
 ## Tips
 

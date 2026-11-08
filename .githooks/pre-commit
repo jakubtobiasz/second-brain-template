@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Opt-in pre-commit hook: block commits that introduce vault lint errors.
+# Enable:  git config core.hooksPath .githooks
+# Disable: git config --unset core.hooksPath     Skip once: git commit --no-verify
+cd "$(git rev-parse --show-toplevel)" || exit 0
+
+# Only run when markdown or skills are staged.
+git diff --cached --name-only | grep -qE '\.md$|^\.agents/' || exit 0
+
+if ! out=$(python3 scripts/lint.py --json 2>&1); then
+  echo "pre-commit: vault lint found errors. Fix them or commit with --no-verify." >&2
+  python3 - "$out" <<'PY' >&2
+import json, sys
+try:
+    data = json.loads(sys.argv[1])
+except Exception:
+    print(sys.argv[1]); sys.exit()
+for e in data["error"][:20]:
+    print(f"  {e['check']:<14} {e['page']}: {e['message']}")
+if len(data["error"]) > 20:
+    print(f"  ... and {len(data['error']) - 20} more (python3 scripts/lint.py)")
+PY
+  exit 1
+fi
+python3 scripts/check-skills.py >/dev/null || { python3 scripts/check-skills.py >&2; exit 1; }
+exit 0

@@ -1,7 +1,7 @@
 ---
 type: profile
 title: About the owner
-updated: 2026-11-08
+updated: YYYY-MM-DD
 ---
 
 # About the owner
@@ -22,5 +22,5 @@ updated: 2026-11-08
 - Things to always do:
 - Things to never do:
 
-## Current focus (as of 2026-11-08)
+## Current focus (as of YYYY-MM-DD)
 -
