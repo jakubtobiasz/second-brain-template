@@ -48,6 +48,7 @@ Each flow is a skill in [`.agents/skills/`](.agents/skills/) (Codex, OpenCode), 
 
 | Say | Skill | What happens |
 |---|---|---|
+| anything vague: "deal with my inbox", "what should I do?", `/second-brain` | `second-brain` | Router: picks and chains the flows below, or suggests next steps from vault state |
 | "save this `<url>`" | `capture` | Verbatim copy into `00-inbox/` with metadata |
 | "ingest the inbox" / "ingest `<file>`" | `ingest` | Plan → your OK → archive to `10-raw/` → wiki pages + index + log |
 | "what do I know about X?" | `query` | Answer from the wiki, cited, with a **Gaps** section; saved if substantial; offers file-back |

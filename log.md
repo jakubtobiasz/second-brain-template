@@ -15,3 +15,6 @@ title: Log
 
 ## [2026-11-08] schema | Added operation skills
 - created: .agents/skills/{capture,ingest,query,lint,repair,project,brain-review,setup}/SKILL.md, .claude/skills → ../.agents/skills (symlink) · updated: AGENTS.md (§2, §4 now summarizes skills), README.md
+
+## [2026-11-08] schema | Added second-brain router skill
+- created: .agents/skills/second-brain/SKILL.md · updated: AGENTS.md §4, README.md

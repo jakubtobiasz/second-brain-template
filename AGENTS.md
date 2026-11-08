@@ -50,7 +50,7 @@ Do **not** read the whole wiki. Navigate index first, then open only the pages y
 │   ├── about.md
 │   └── templates/
 ├── scripts/lint.py      # mechanical health check (stdlib Python)
-├── .agents/skills/      # operation procedures (capture, ingest, query, lint, repair, project, brain-review, setup)
+├── .agents/skills/      # operation procedures (second-brain router + capture, ingest, query, …)
 └── .claude/             # settings.json, hooks/protect_paths.py, skills -> ../.agents/skills (symlink)
 ```
 
@@ -130,12 +130,14 @@ updated: 2026-01-01
 
 ## 4. Operations
 
-The owner triggers operations in plain language. Each operation has a **skill** with the full procedure in
+The owner triggers operations in plain language. When it's unclear which flow applies, or the request spans
+several, start with the `second-brain` router skill. Each operation has a **skill** with the full procedure in
 `.agents/skills/<name>/SKILL.md` (also reachable as `.claude/skills/` through a symlink). Load the skill when its
 flow starts. The summaries below are the contract; the skills are the step-by-step.
 
 | Skill | Trigger (examples) | What it does |
 |---|---|---|
+| `second-brain` | vague or multi-step requests, "what should I do?" | **Router**: classifies the request, chains flows in order, suggests next actions from vault state. Writes nothing itself |
 | `capture` | "save this", "clip this URL" | Verbatim copy into `00-inbox/` with metadata. No wiki changes |
 | `ingest` | "ingest", "process the inbox" | One source at a time: read → map → **check in** → archive to `10-raw/` → source page + updates to 5-15 pages with links both ways → index + log |
 | `query` | "what do I know about X?" | Index first → answer with `[[citations]]` + required **Gaps** → save if substantial → offer to file back into the wiki |
