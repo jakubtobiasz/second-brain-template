@@ -1,0 +1,14 @@
+---
+type: log
+title: Log
+---
+
+# Log
+
+> Append-only timeline. Newest at the bottom. Last entries: `grep "^## \[" log.md | tail -10`
+
+## [2026-11-08] setup | Vault created from Second-Brain template
+- created: AGENTS.md, index.md, log.md, 90-system/templates/*
+
+## [2026-11-08] schema | Added linter and protect hook
+- created: scripts/lint.py, .claude/hooks/protect_paths.py, .claude/settings.json · updated: AGENTS.md (§2, §4.4, §6), README.md
